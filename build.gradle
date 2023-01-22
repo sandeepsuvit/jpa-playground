@@ -1,0 +1,91 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.0.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.sivalabs'
+version = '0.0.1'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+ext {
+    set('testcontainersVersion', "1.17.6")
+    set('webjarsLocatorVersion', "0.46")
+    set('bootstrapVersion', "5.2.3")
+    set('jqueryVersion', "3.6.1")
+    set('fontAwesomeVersion', "6.2.0")
+    set('commonsLangVersion', "3.12.0")
+    set('commonsIoVersion', "2.11.0")
+    set('opencsvVersion', "5.7.1")
+    set('archunitVersion', "1.0.0")
+    set('datafakerVersion', "1.6.0")
+    set('awaitilityVersion', "4.2.0")
+    set('hypersistenceUtilsVersion', "3.1.1")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    implementation("io.hypersistence:hypersistence-utils-hibernate-60:${hypersistenceUtilsVersion}")
+    implementation 'org.flywaydb:flyway-core'
+    compileOnly 'org.projectlombok:lombok'
+    testImplementation 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation "org.webjars:webjars-locator:${webjarsLocatorVersion}"
+    implementation "org.webjars:bootstrap:${bootstrapVersion}"
+    implementation "org.webjars:jquery:${jqueryVersion}"
+    implementation "org.webjars:font-awesome:${fontAwesomeVersion}"
+
+    implementation "org.apache.commons:commons-lang3:${commonsLangVersion}"
+    implementation "commons-io:commons-io:${commonsIoVersion}"
+    implementation "com.opencsv:opencsv:${opencsvVersion}"
+
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:postgresql"
+    testImplementation "org.awaitility:awaitility:${awaitilityVersion}"
+    testImplementation "com.tngtech.archunit:archunit-junit5:${archunitVersion}"
+    testImplementation "net.datafaker:datafaker:${datafakerVersion}"
+    testImplementation "io.rest-assured:rest-assured"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events = ["PASSED", "FAILED", "SKIPPED"]
+        showStandardStreams = true
+        exceptionFormat = "full"
+    }
+}
