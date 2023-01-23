@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -43,7 +44,9 @@ public class UpdatePostController {
 
 	@PutMapping("/posts/{id}")
 	public String updateBookmark(@PathVariable Long id,
-			@Valid @ModelAttribute(MODEL_ATTRIBUTE_POST) UpdatePostRequest request, BindingResult bindingResult) {
+								 @Valid @ModelAttribute(MODEL_ATTRIBUTE_POST) UpdatePostRequest request,
+								 BindingResult bindingResult,
+								 RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			return "edit-post";
 		}
@@ -55,6 +58,7 @@ public class UpdatePostController {
 				request.categoryId());
 		Post updatedPost = updatePostHandler.updatePost(updatePostRequest);
 		log.info("Post with id: {} updated successfully", updatedPost.getId());
-		return "redirect:/c/" + updatedPost.getCategory().getSlug();
+		redirectAttributes.addFlashAttribute("message", "Post updated successfully");
+		return "redirect:/posts/" + updatedPost.getId()+"/edit";
 	}
 }
